@@ -1,1 +1,228 @@
-<html><body>Hello!!!</body></html>
+<!DOCTYPE html>
+<html>
+	<head>
+        <title>A Handy Dandy  JavaScript 3D Rotation Calculator</title>
+        <meta charset="UTF-8"></meta>
+		<style>
+			body { margin: 10px; font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; }
+			canvas { width: 100%; height: 100% }
+            input { -webkit-touch-callout: none !important; -webkit-user-select: none !important; }
+            button { -webkit-touch-callout: none !important; -webkit-user-select: none !important; }
+        </style>
+        <link href="js/dat.gui.css" rel="stylesheet" />
+	</head>
+	<body>
+        <h3 style="margin-bottom: 0px;">A Handy Dandy JavaScript 3D Rotation Calculator</h3>
+        <div style="margin-bottom: 10px;">Written by Johnny Ernest</div>
+
+        <div id="main" style="width:400px;height:300px;">
+            <canvas id="mainCanvas" style="width:400px;height:300px;">
+
+            </canvas>
+        </div>
+        <div id="rotation"></div>
+        <div id="camera-position"></div>
+        <div class="heading"><b>Camera Panning</b></div>
+        <div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.camera_mousedown(event, 'x+','position')" value="camera x+" onpointerup="main3D.camera_mouseup('x+')" onmouseout="main3D.camera_mouseup('x+')" /><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.camera_mousedown(event, 'x-','position')" value="camera x-" onpointerup="main3D.camera_mouseup(event, 'x-')" onmouseout="main3D.camera_mouseup(event, 'x-')" /><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.camera_mousedown(event, 'y+','position')" value="camera y+" onpointerup="main3D.camera_mouseup(event, 'y+')" onmouseout="main3D.camera_mouseup(event, 'y+')" /><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.camera_mousedown(event, 'y-','position')" value="camera y-" onpointerup="main3D.camera_mouseup(event, 'y-')" onmouseout="main3D.camera_mouseup(event, 'y-')" /><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.camera_mousedown(event, 'z+','position')" value="camera z+" onpointerup="main3D.camera_mouseup(event, 'z+')" onmouseout="main3D.camera_mouseup(event, 'z+')" /><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.camera_mousedown(event, 'z-','position')" value="camera z-" onpointerup="main3D.camera_mouseup(event, 'z-')" onmouseout="main3D.camera_mouseup(event, 'z-')" /><br/>
+            </div>
+        </div>
+        <div class="heading"><b>Euler Rotation Addition/Subtraction [Original += Increment]</b></div>
+        <div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.camera_mousedown(event, 'x+','rotation')" value="cube x+" onpointerup="main3D.camera_mouseup(event, 'x+')" onmouseout="main3D.camera_mouseup(event, 'x+')" ontouchstart="touchEventStub(event)" ontouchend="touchEventStub(event)" /><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.camera_mousedown(event, 'x-','rotation')" value="cube x-" onpointerup="main3D.camera_mouseup(event, 'x-')" onmouseout="main3D.camera_mouseup(event, 'x-')" /><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.camera_mousedown(event, 'y+','rotation')" value="cube y+" onpointerup="main3D.camera_mouseup(event, 'y+')" onmouseout="main3D.camera_mouseup(event, 'y+')" /><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.camera_mousedown(event, 'y-','rotation')" value="cube y-" onpointerup="main3D.camera_mouseup(event, 'y-')" onmouseout="main3D.camera_mouseup(event, 'y-')" /><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.camera_mousedown(event, 'z+','rotation')" value="cube z+" onpointerup="main3D.camera_mouseup(event, 'z+')" onmouseout="main3D.camera_mouseup(event, 'z+')" /><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.camera_mousedown(event, 'z-','rotation')" value="cube z-" onpointerup="main3D.camera_mouseup(event, 'z-')" onmouseout="main3D.camera_mouseup(event, 'z-')" /><br/>
+            </div>
+        </div>
+        <div class="heading"><b>Pre-Multiply Quaternion/Matrix [Increment *= Original]</b></div>
+        <div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'x','inertial',3.0)" onpointerup="main3D.cube_mouseup(event, 'x')" onmouseout="main3D.cube_mouseup(event, 'x')" value="x+ i"/><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'x','inertial',-3.0)" onpointerup="main3D.cube_mouseup(event, 'x')" onmouseout="main3D.cube_mouseup(event, 'x')" value="x- i"/><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'y','inertial',3.0)" onpointerup="main3D.cube_mouseup(event, 'y')" onmouseout="main3D.cube_mouseup(event, 'y')" value="y+ i"/><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'y','inertial',-3.0)" onpointerup="main3D.cube_mouseup(event, 'y')" onmouseout="main3D.cube_mouseup(event, 'y')" value="y- i"/><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'z','inertial',3.0)" onpointerup="main3D.cube_mouseup(event, 'z')" onmouseout="main3D.cube_mouseup(event, 'z')" value="z+ i"/><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'z','inertial',-3.0)" onpointerup="main3D.cube_mouseup(event, 'z')" onmouseout="main3D.cube_mouseup(event, 'z')" value="z- i"/><br/>
+            </div>
+        </div>
+        <div class="heading"><b>Post-Multiply Quaternion/Matrix [Original *= Increment]</b></div>
+        <div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'x','body',3.0)" onpointerup="main3D.cube_mouseup(event, 'x')" onmouseout="main3D.cube_mouseup(event, 'x')" value="x+ b"/><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'x','body',-3.0)" onpointerup="main3D.cube_mouseup(event, 'x')" onmouseout="main3D.cube_mouseup(event, 'x')" value="x- b"/><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'y','body',3.0)" onpointerup="main3D.cube_mouseup(event, 'y')" onmouseout="main3D.cube_mouseup(event, 'y')" value="y+ b"/><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'y','body',-3.0)" onpointerup="main3D.cube_mouseup(event, 'y')" onmouseout="main3D.cube_mouseup(event, 'y')" value="y- b"/><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'z','body',3.0)" onpointerup="main3D.cube_mouseup(event, 'z')" onmouseout="main3D.cube_mouseup(event, 'z')" value="z+ b"/><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'z','body',-3.0)" onpointerup="main3D.cube_mouseup(event, 'z')" onmouseout="main3D.cube_mouseup(event, 'z')" value="z- b"/><br/>
+            </div>
+        </div>
+        <div style="padding:10px;">
+            Note in the above that Euler X+/- is the same as Quaternion Pre-Multiply X+/-, and that Euler Z+/- is the same as Quaternion Post-Multiply Z+/-, but Euler Pitch Angle Y+/- is slightly different than Pre/Post-Multiply.
+            Note also that additional math formulas are used to retain the Euler angle in a human readable format when the pitch angle changes between 90 degrees and 270 degrees.
+        </div>
+        <div class="heading"><b>Euler Pitch Angle Addition/Subtraction Emulation by Quaternion Multiplication</b></div>
+        <div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'y','add-pre',3.0)" onpointerup="main3D.cube_mouseup(event, 'y')" onmouseout="main3D.cube_mouseup(event, 'y')" value="y+ pre"/><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'y','sub-pre',-3.0)" onpointerup="main3D.cube_mouseup(event, 'y')" onmouseout="main3D.cube_mouseup(event, 'y')" value="y- pre"/><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'y','add-post',3.0)" onpointerup="main3D.cube_mouseup(event, 'y')" onmouseout="main3D.cube_mouseup(event, 'y')" value="y+ post"/><br/>
+            </div>
+            <div style="display: inline-block;">
+                <input type="button" onpointerdown="main3D.cube_mousedown(event, 'y','sub-post',-3.0)" onpointerup="main3D.cube_mouseup(event, 'y')" onmouseout="main3D.cube_mouseup(event, 'y')" value="y- post"/><br/>
+            </div>
+        </div>
+        <div class="heading" style="margin-top: 30px;"><b>Quaternion Multiplication Formulas</b></div>
+        <div style="padding: 10px;">Note that the order of multiplication matters in the below.</div>
+        <div id="math" style="margin: 10px;">
+            <div>
+                <select id="quaternionMult" onchange="changeMathText();">
+                    <option selected>XYZ</option>
+                    <option>XZY</option>
+                    <option>YXZ</option>
+                    <option>YZX</option>
+                    <option>ZXY</option>
+                    <option>ZYX</option>
+                </select>
+            </div>
+            <div id="quaternionMultiplicationText" style="display: inline-block;">
+            </div>
+        </div>
+
+        <div class="heading" style="margin-top: 30px;"><b>Quaternion Solver</b></div>
+        <div>
+            <div>qA</div>
+            <div style="display: inline-block;">W: <input type="text" placeholder="w" id="qA_w" name="qA_w" value="1" /></div>
+            <div style="display: inline-block;">X: <input type="text" placeholder="x" id="qA_x" name="qA_x" value="0" /></div>
+            <div style="display: inline-block;">Y: <input type="text" placeholder="y" id="qA_y" name="qA_y" value="0" /></div>
+            <div style="display: inline-block;">Z: <input type="text" placeholder="z" id="qA_z" name="qA_z" value="0" /></div>
+            <div>qB</div>
+            <div style="display: inline-block;">W: <input type="text" placeholder="w" id="qB_w" name="qB_w" value="1" /></div>
+            <div style="display: inline-block;">X: <input type="text" placeholder="x" id="qB_x" name="qB_x" value="0" /></div>
+            <div style="display: inline-block;">Y: <input type="text" placeholder="y" id="qB_y" name="qB_y" value="0" /></div>
+            <div style="display: inline-block;">Z: <input type="text" placeholder="z" id="qB_z" name="qB_z" value="0" /></div>
+            <br/>
+            <input type="button" onpointerdown="calculateQuaternions()" value="Calculate"/>
+            <br/>
+            <div>qA * qB = X; X=<div style="display: inline-block; vertical-align: middle;" >
+                    <div id="calc_qX_1"></div>
+                    <div id="calc_mX_1"></div>
+                </div>
+            </div>
+            <div>X * qA = qB; X=<div style="display: inline-block; vertical-align: middle;" >
+                    <div id="calc_qX_2"></div>
+                    <div id="calc_mX_2"></div>
+                </div>
+            </div>
+            <div>qA * X = qB; X=<div style="vertical-align: middle; display: inline-block;">
+                    <div id="calc_qX_3"></div>
+                    <div id="calc_mX_3"></div>
+                </div>
+            </div>
+            <div>A = <div id="calc_mA" style="display: inline-block; vertical-align: middle;"></div></div>
+            <div>B = <div id="calc_mB" style="display: inline-block; vertical-align: middle;"></div></div>
+        </div>
+
+        <style>
+            .heading {
+                margin-top: 5px;
+            }
+        </style>
+        <script type="text/javascript" src="js/three.js"></script>
+        <script type="text/javascript" src="js/dat.gui.min.js"></script>
+        <script type="text/javascript" src="js/GLTFLoader.js"></script>
+        <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+		<script type="x-shader/x-vertex" id="vertexShader">
+			varying vec3 vWorldPosition;
+			void main() {
+				vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+				vWorldPosition = worldPosition.xyz;
+				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+			}
+		</script>
+		<script type="x-shader/x-fragment" id="fragmentShader">
+			uniform vec3 topColor;
+			uniform vec3 bottomColor;
+			uniform float offset;
+			uniform float exponent;
+
+			varying vec3 vWorldPosition;
+
+			void main() {
+				float h = normalize( vWorldPosition + offset ).y;
+				gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max( h , 0.0), exponent ), 0.0 ) ), 1.0 );
+			}
+		</script>
+		<script type="text/javascript" class="tex2jax_ignore" src="js/main-three-script.js">
+		</script>
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({
+                extensions: ["tex2jax.js"],
+                jax: ["input/TeX", "output/HTML-CSS"],
+                tex2jax: {
+                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                processEscapes: true
+                },
+                "HTML-CSS": { fonts: ["TeX"] }
+            });
+        </script>
+        <script type="text/javascript" src="js/mathjax/MathJax.js">
+        </script>
+        <script type="text/javascript" src="js/rotation-formulas.js">
+        </script>
+	</body>
+</html>
